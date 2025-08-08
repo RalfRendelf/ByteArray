@@ -3,7 +3,8 @@
 ByteArray *createByteArray()
 {
     ByteArray *array = (ByteArray *)malloc(sizeof(ByteArray));
-    if (!array) {
+    if (!array)
+    {
         printf("ERROR: Failed to allocate memory for ByteArray\n");
         return NULL;
     }
@@ -13,15 +14,16 @@ ByteArray *createByteArray()
     return array;
 }
 
-int freeByteArray(ByteArray *array)
+int freeByteArray(ByteArray *a)
 {
-    if (array != NULL)
+    if (!a) return -1; // Failure, array was NULL
+    if(a->data)
     {
-        free(array->data);
-        free(array);
-        return 0; // Success
+        free(a->data);
+        a->data = NULL; // Set data to NULL after freeing
     }
-    return -1; // Failure, array was NULL
+    free(a);
+    return 0; // Success
 }
 
 int appendToByteArray(ByteArray *array, const void *data, size_t size)
@@ -34,13 +36,12 @@ int appendToByteArray(ByteArray *array, const void *data, size_t size)
         return -1;
     }
 
-    memcpy(newData + array->size, data, size); 
+    memcpy(newData + array->size, data, size);
     array->data = newData;
     array->size = newSize;
 
     return 0;
 }
-
 
 int removeFromByteArray(ByteArray *array, size_t startPoint, size_t length)
 {
